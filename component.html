@@ -26,7 +26,7 @@
 <template id="template1">
   <div>
     <h2>模板写法-template</h2>
-    <div>我是模板的内容</div>
+    <div>{{content}}</div>
   </div>
 </template>
 <script>
@@ -63,7 +63,12 @@
   });
 
   Vue.component('cpn5', {template: cpn});
-  Vue.component('cpn6', {template: template1});
+  //组件中的数据 data 必须为函数， 返回一个对象
+  Vue.component('cpn6', {template: template1, data(){
+      return {
+        content: '组件data设置的数据'
+      }
+    }});
   const app = new Vue({
     el: '#app',
     data: {

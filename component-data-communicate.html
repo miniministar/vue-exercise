@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>Vue 测试实例 - 组件化</title>
+  <script src="js/vue.js"></script>
+</head>
+<body>
+<div id="app">
+<!--  监听事件名称-->
+  <nav0 @itemclick="itemClick"></nav0>
+  <cpn></cpn>
+  <cart></cart>
+  <p0></p0>
+</div>
+
+<template id="template1">
+  <div>
+    <h2>{{title}}</h2>
+    <ul>
+      <li v-for="item in movies">{{item}}</li>
+    </ul>
+  </div>
+</template>
+
+<template id="template0">
+  <div>
+    <h2>总数-{{movies.length}}</h2>
+    <cpn1 :movies="movies"></cpn1>
+  </div>
+</template>
+
+<template id="books">
+  <div>
+    <h3 style="text-align: center;">{{showTitle}}</h3>
+    <table border="1" cellspacing="0">
+      <tr>
+        <th width="200">书籍</th>
+        <th width="100">单价</th>
+        <th width="100">数量</th>
+        <th width="100">操作</th>
+      </tr>
+      <tr v-for="(item, index) in books">
+        <td>{{item.name}}</td>
+        <td>{{item.price | showPrice}}</td>
+        <td>
+          <button :disabled="item.count === 0" @click="decr(index)">-</button>
+          {{item.count}}
+          <button @click="incr(index)">+</button>
+        </td>
+        <td>
+          <button>移除</button>
+        </td>
+      </tr>
+    </table>
+  </div>
+</template>
+
+<template id="cpnCart">
+    <div>
+<!--      props是驼峰，在子组件声明时使用-表示-->
+      <books :books="books" :show-title="showTitle"></books>
+      <h3>总价: {{totalPrice | showPrice}}</h3>
+    </div>
+</template>
+
+<template id="templateNav">
+  <div>
+    <ul>
+      <li @click="btnClick(item)" v-for="(item, index) in categories">{{item.name}}</li>
+    </ul>
+  </div>
+</template>
+
+<template id="parentModel">
+  <c0 :num0="num0" :num1="num1"
+    @input-num0="changeNum0"
+    @input-num1="changeNum1"
+  ></c0>
+</template>
+
+<template id="childModel">
+  <div>
+    props: {{num0}}
+    data: {{cnum0}}
+    <input type="text" :value="cnum0" @input="inputNum0">
+    <br>
+    props: {{num1}}
+    data: {{cnum1}}
+    <input type="text" :value="cnum1" @input="inputNum1">
+  </div>
+</template>
+<script>
+  //父传子
+  const cpn = {
+    template: template0,
+    data() {
+      return {
+        movies: ['海王', '哪吒', '谍影重重'],
+        title: '电影'
+      }
+    },
+    components: {
+      cpn1: {
+        template: template1,
+        // 数组方式
+        // props: ['movies', 'title'],
+        // 对象方式
+        props: {
+          title: {
+            type: String,
+            default: '标题'
+          },
+          movies: {
+            type: Array,
+            required: true
+          }
+        },
+        data(){
+          return {
+          }
+        }
+      }
+    }
+  }
+
+  const cart = {
+    template: cpnCart,
+    data(){
+      return {
+        books: [
+          {name: '老人与海', price: 45, count: 1},
+          {name: '战争与和平', price: 25.5, count: 0},
+          {name: '货币金融学', price: 35, count: 3},
+          {name: 'java编程思想', price: 55, count: 1}
+        ],
+        showTitle: 'props是驼峰，在子组件声明时使用-表示'
+      }
+    },
+    computed: {
+      totalPrice() {
+        return this.books.map(item => {return item.price * item.count}).reduce((pre, cur)=>pre+cur, 0);
+      }
+    },
+    filters:{
+      showPrice(price){
+        return "￥" +  price.toFixed(2);
+      }
+    },
+    components:{
+      books: {
+        template: books,
+        props: {
+          books:{
+            type: Array,
+            default(){
+              return [];
+            }
+          },
+          showTitle: {
+            type: String,
+            default: '标题',
+            required: true
+          }
+        },
+        methods: {
+          incr(index){
+            this.books[index].count++
+          },
+          decr(index){
+            this.books[index].count--
+          }
+        },
+        filters:{
+          showPrice(price){
+            return "￥" +  price.toFixed(2);
+          }
+        }
+      }
+    }
+  };
+
+  const nav0 = {
+    template: templateNav,
+    data() {
+      return {
+        categories: [
+          {id: 1, name: '热门推荐'},
+          {id: 2, name: '手机数码'},
+          {id: 3, name: '家具家电'},
+          {id: 4, name: '电脑办公'}
+          ]
+      }
+    },
+    methods: {
+      btnClick(item){
+        // console.log(item);
+        // 子传父this.$emit(自定义事件名称, 参数);
+        this.$emit('itemclick', item);
+      }
+    }
+  };
+
+  const p0 = {
+    template: parentModel,
+    data(){
+      return {
+        num0: 0,
+        num1: 1
+      }
+    },
+    methods: {
+      changeNum0(num){
+        console.log(num);
+        this.num0 = parseInt(num);
+      },
+      changeNum1(num){
+        this.num1 = parseInt(num);
+      }
+    },
+    components: {
+      c0: {
+        template: childModel,
+        props: {
+          num0: {
+            type: Number,
+            required: true
+          },
+          num1: {
+            type: Number,
+            required: true
+          }
+        },
+        data() {
+          return {
+            cnum0: this.num0,
+            cnum1: this.num1
+          }
+        },
+        methods: {
+          inputNum0(event){
+            this.cnum0 = event.target.value;
+            this.$emit('input-num0', this.cnum0);
+          },
+          inputNum1(event){
+            this.cnum1 = event.target.value;
+            this.$emit('input-num1', this.cnum1);
+          }
+        }
+      }
+    }
+  }
+
+  const app = new Vue({
+    el: '#app',
+    data: {
+    },
+    components:{
+      cpn:  cpn,
+      cart: cart,
+      nav0: nav0,
+      p0: p0
+    },
+    methods: {
+      itemClick(item) {
+        console.log('子组件点击了');
+        console.log(item);
+      }
+    }
+  })
+
+</script>
+</body>
+</html>

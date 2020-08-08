@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>Vue 测试实例 - 组件化</title>
+  <script src="js/vue.js"></script>
+</head>
+<body>
+<div id="app">
+  <cpn1></cpn1>
+  <cpn1></cpn1>
+  <cpn1></cpn1>
+</div>
+
+<template id="template1">
+  <div>
+    <h2>当前计数-{{count}}</h2>
+    <button @click="incr">+</button>
+    <button @click="decr">-</button>
+  </div>
+</template>
+
+<template id="template0">
+  <div>
+    <h2>总数-{{count}}</h2>
+    <cpn1></cpn1>
+    <cpn1></cpn1>
+  </div>
+</template>
+<script>
+  //组件中的数据 data 必须为函数， 返回一个对象
+  //如果data 为对象，怎么每个调用组件的地方使用的都是同一个data, 不是单独实例，使用函数，则每个调用组件的地方都是单独实例
+  Vue.component('cpn1', {
+    template: template1,
+    data(){
+      return {
+        count: 0
+      }
+    },
+    methods: {
+      incr() {
+        this.count++;
+      },
+      decr() {
+        this.count--;
+      }
+    }
+  });
+  const app = new Vue({
+    el: '#app',
+    data: {
+    },
+    components:{
+      counters:  {
+        template: template0
+      }
+    }
+  })
+
+</script>
+</body>
+</html>
