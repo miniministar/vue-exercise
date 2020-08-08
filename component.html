@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>Vue 测试实例 - 组件化</title>
+  <script src="js/vue.js"></script>
+</head>
+<body>
+<div id="app">
+  <cpn2></cpn2>
+  <cpn3></cpn3>
+  <cpn4></cpn4>
+  <cpn5></cpn5>
+  <cpn6></cpn6>
+</div>
+
+<!--1、script模板写法-->
+<script type="text/x-template" id="cpn">
+  <div>
+    <h2>模板写法-script</h2>
+    <div>我是模板的内容</div>
+  </div>
+</script>
+<!--2、template标签模板写法-->
+<template id="template1">
+  <div>
+    <h2>模板写法-template</h2>
+    <div>我是模板的内容</div>
+  </div>
+</template>
+<script>
+  //1.创建第一个组件
+  const cnpc1 = Vue.extend({
+    template:
+      `<div>
+        <h2>我是标题1</h2>
+        <div>我是内容1</div>
+      </div>`,
+  });
+  //2.创建第二个组件
+  const cnpc2 = Vue.extend({
+    template:
+      `<div>
+        <h2>我是标题2</h2>
+        <cpn1></cpn1>
+      </div>`,
+    components:{
+      cpn1: cnpc1
+    }
+  });
+
+  //语法糖注册组件
+  Vue.component('cpn3', {
+      template:
+        `<div>
+          <h2>我是标题3</h2>
+          <cpn1></cpn1>
+        </div>`,
+          components:{
+            cpn1: cnpc1
+          }
+  });
+
+  Vue.component('cpn5', {template: cpn});
+  Vue.component('cpn6', {template: template1});
+  const app = new Vue({
+    el: '#app',
+    data: {
+    },
+    components:{
+      //注册局部组件
+      cpn2: cnpc2,
+      //语法糖注册组件
+      cpn4: {
+        template:
+          `<div>
+          <h2>我是标题4</h2>
+        </div>`
+      }
+    }
+  })
+
+</script>
+</body>
+</html>

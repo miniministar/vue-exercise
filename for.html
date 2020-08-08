@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>Vue 测试实例 - 菜鸟教程(runoob.com)</title>
+  <script src="js/vue.js"></script>
+  <style>
+    .active {
+      color: aqua;
+    }
+  </style>
+</head>
+<body>
+<div id="app">
+  编程范式：命令式编程、声明式编程；面向对象编程（第一公民：对象）、函数式编程（第一公民：函数）
+  <ul>
+    <li @click="toActive(index)" v-for="(item, index) in items" :class="{active: currentIndex === index}" :key="item" >{{item}}</li>
+  </ul>
+ <!-- 响应式的函数，修改数组里的值能在dom中显示，push/unshift/shift/pop、splice(start, length, value)
+ Vue.set(要修改的对象， 索引值， 修改后的值)
+  直接使用下标修改值，不是响应式-->
+  <button @click="pushArr">push添加</button>
+  <button @click="unshiftArr">unshift添加</button>
+  <button @click="shiftArr">shift删除</button>
+  <button @click="popArr">pop删除</button>
+  <button @click="spliceArr">splice替换</button>
+  <button @click="indexModify">index修改</button>
+  <button @click="vueSetModify">vueSet修改</button>
+</div>
+<script>
+  const app = new Vue({
+    el: '#app',
+    data: {
+      username:'',
+      message: 'Hello Vue.js!',
+      firstName: '你贵拉斯',
+      lastName: '开启',
+      showError: false,
+      currentIndex: 0,
+      items: ['A','B','C','D']
+    }, computed: {
+    },methods: {
+      pushArr() {
+        this.items.push('push'+ this.items.length)
+      },
+      unshiftArr() {
+        this.items.unshift('unshift' + this.items.length);
+      },
+      shiftArr() {
+        this.items.shift()
+      },
+      popArr() {
+        this.items.pop()
+      },
+      indexModify() {
+        this.items[0] = 'modify';
+      },
+      vueSetModify() {
+        Vue.set(this.items, 0, 'vueSet');
+      },
+      toActive(index) {
+        this.currentIndex = index;
+      },
+      spliceArr() {
+        this.items.splice(0, 1, 'splice');
+      }
+    }
+  })
+
+</script>
+</body>
+</html>
