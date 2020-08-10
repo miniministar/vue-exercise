@@ -32,3 +32,8 @@ hs_err_pid*
 
 # maven
 */target
+
+#html,js,css
+#*/node_modules 或者 node_modules/
+node_modules/
+dist/

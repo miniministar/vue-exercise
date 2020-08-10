@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>Vue 测试实例 - 组件化</title>
+  <script src="js/vue.js"></script>
+</head>
+<body>
+<div id="app">
+  <cpn-area ></cpn-area>
+  <cpn-area>
+<!--    在vue2.5.x以下必须使用template-->
+    <template slot="pLanguages" slot-scope="slot">
+      <div>
+        <span v-for="item in slot.data">{{item}}-</span>
+      </div>
+    </template>
+  </cpn-area>
+
+  <cpn-area>
+    <!--  父组件替换插槽的标签，但是内容由子组件来提供  -->
+    <template slot="pLanguages" slot-scope="slot">
+      <div>
+        <span>{{slot.data.join(' - ')}}</span>
+      </div>
+    </template>
+  </cpn-area>
+
+
+  <cpn>
+<!--    只会替换没有名字-->
+<!--    <span>标题</span>-->
+    <span slot="center">标题</span>
+  </cpn>
+  <cpn></cpn>
+  <cpn>
+    <div slot="right" style="display: inline-block;">
+      <button>按钮</button>
+    </div>
+  </cpn>
+</div>
+<template id="cpn0">
+  <div>
+    <h2>我是子组件</h2>
+    <p>哈哈哈</p>
+<!--
+  1、插槽的基本使用 <slot></slot>
+  2、插槽的默认值 <slot>button</slot>
+  3、如果有多个值，同时放入到组件进行替换时，一起作为替换元素
+-->
+    <slot>
+      <button>按钮</button>
+    </slot>
+  </div>
+</template>
+
+<template id="cpn">
+  <div>
+    <slot name="left">
+      <span>左边的</span>
+    </slot>
+    <slot name="center">
+      <span>中间的</span>
+    </slot>
+    <slot name="right">
+      <span>右边的</span>
+    </slot>
+  </div>
+</template>
+
+<template id="cpnArea">
+  <div>
+<!--    将子组件中的数据传递给插槽作用域，在父组件中就可以拿到插槽对象-->
+    <slot name="pLanguages" :data="pLanguages">
+      <ul>
+        <li v-for="item in pLanguages">{{item}}</li>
+      </ul>
+    </slot>
+  </div>
+</template>
+
+<script>
+ const cpn0 = {
+   template: '#cpn0',
+   data(){
+     return {name: '我是子组件'}
+   },
+   methods: {
+     showMessge() {
+       console.log('show message');
+     },
+   }
+ };
+
+ const cpn = {
+   template: '#cpn',
+   data(){
+     return {name: '我是子组件'}
+   },
+   methods: {
+     showMessge() {
+       console.log('show message');
+     },
+   }
+ };
+
+
+ const cpnArea = {
+   template: '#cpnArea',
+   data(){
+     return {
+       pLanguages:['javaScript', 'html', 'css', 'java', 'php', 'c++', 'c', 'payton', 'go', 'swift']
+     }
+   }
+ };
+
+
+ const app = new Vue({
+    el: '#app',
+    data: {
+      message: "app组件",
+    },
+    components:{
+      cpn0: cpn0,
+      cpn: cpn,
+      cpnArea: cpnArea
+    },
+    methods: {
+      btnClick() {
+      }
+    }
+  })
+
+</script>
+</body>
+</html>

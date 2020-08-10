@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>Vue 测试实例 - 组件化</title>
+  <script src="js/vue.js"></script>
+</head>
+<body>
+<div id="app">
+  <cpn0></cpn0>
+  <cpn0></cpn0>
+<!--  ref 定义了一个子组件的key-->
+  <cpn0 ref="aaa"></cpn0>
+  <cpn></cpn>
+  <button @click="btnClick">按钮</button>
+</div>
+<template id="cpn">
+  <div>
+    <h2>我是父组件</h2>
+    <cpn0></cpn0>
+  </div>
+</template>
+<template id="cpn0">
+  <div>
+    <h2>我是子组件</h2>
+    <button @click="btnClick">子访问父</button>
+  </div>
+</template>
+<script>
+ const cpn0 = {
+   template: '#cpn0',
+   data(){
+     return {name: '我是子组件'}
+   },
+   methods: {
+     showMessge() {
+       console.log('show message');
+     },
+     btnClick() {
+       //子访问父组件
+       console.log(this.$parent);
+       console.log(this.$parent.message);
+
+       //访问根组件
+       console.log('root:'+this.$root.message);
+     }
+   }
+ };
+
+  const app = new Vue({
+    el: '#app',
+    data: {
+      message: "app组件"
+    },
+    components:{
+      cpn0: cpn0,
+      cpn: {
+        template: '#cpn',
+        data(){
+          return{message: '我是父组件'}
+        },
+        components:{
+          cpn0: cpn0
+        }
+      }
+    },
+    methods: {
+      btnClick() {
+        console.log('点击按钮');
+        //父组件通过$children访问子组件
+        console.log(this.$children);
+        for(let c of this.$children) {
+          c.showMessge();
+        }
+        //$.refs 默认为空
+        console.log(this.$refs);
+        this.$refs.aaa.showMessge();
+        console.log(this.$refs.aaa.name);;
+      }
+    }
+  })
+
+</script>
+</body>
+</html>
