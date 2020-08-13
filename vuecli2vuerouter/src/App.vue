@@ -7,7 +7,8 @@
 <!--    <button @click="profileClick">档案</button>-->
 <!--    <button @click="homeClick">首页</button>-->
 <!--    <button @click="aboutClick">关于</button>-->
-    <keep-alive>
+    <!--      exclude不能加空格-->
+    <keep-alive exclude="Profile,User">
       <router-view/>
     </keep-alive>
   </div>

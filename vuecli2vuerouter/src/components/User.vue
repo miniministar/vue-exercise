@@ -13,6 +13,12 @@
         //this.$route 当前活跃的路由对象
         return this.$route.params.userId;
       }
+    },
+    created() {
+      console.log('User created');
+    },
+    destroyed() {
+      console.log('User destroyed');
     }
   }
 </script>

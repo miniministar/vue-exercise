@@ -27,7 +27,7 @@ const routes = [
     },
     //嵌套路由
     children: [
-      // //嵌套路由默认路径
+      //嵌套路由默认路径
       // {
       //   path: '',
       //   redirect: 'news'
