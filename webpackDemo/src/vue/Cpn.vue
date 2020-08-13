@@ -1,10 +1,18 @@
 <template>
-  $END$
+  <div>
+    <h2>我是cpn组件的标题</h2>
+    <p>我是cpn组件的内容</p>
+  </div>
 </template>
 
 <script>
   export default {
-    name: "Cpn.vue"
+    name: "Cpn",
+    data(){
+      return {
+        message: 'hello '
+      }
+    },
   }
 </script>
 

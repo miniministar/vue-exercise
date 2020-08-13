@@ -11,3 +11,16 @@ require('./css/normal.css');
 
 // 4、依赖less文件
 // require('./css/special.less');
+
+import Vue from 'vue';
+
+// import App from './vue/app.js';
+import App from './vue/App.vue';
+
+new Vue({
+  el:'#app',
+  template: '<App/>',
+  components: {
+    App
+  }
+});

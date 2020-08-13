@@ -1,5 +1,8 @@
 //依赖node中的path
 const path = require('path');
+const webpack = require('webpack');
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+const uglifyJsPlugin = require("uglifyjs-webpack-plugin");
 
 module.exports = {
   entry: './src/main.js',
@@ -7,7 +10,7 @@ module.exports = {
     //path 为绝对路径
     path:  path.resolve( __dirname, 'dist'),
     filename: 'bundle.js',
-    publicPath: 'dist/'
+    // publicPath: 'dist/'
   },
   module: {
     rules: [
@@ -43,7 +46,42 @@ module.exports = {
             }
           }
         ]
+      },
+      {
+        test: /\.js$/,
+        exclude: /(node_modules|bower_components)/,
+        use: {
+          loader: 'babel-loader',
+          options: {
+            //babel 将es6转化为es5
+            presets: ['es2015']
+          }
+        }
+      },
+      {
+        test: /\.vue$/,
+        use: ['vue-loader']
       }
-  ]
+    ]
+  },
+  resolve: {
+    //添加引用时省略扩展名
+    extensions: ['.js', '.css', '.vue'],
+    alias: {
+      'vue$': 'vue/dist/vue.esm.js'
+    }
+  },
+  plugins: [
+    new webpack.BannerPlugin('最终版权归冉庆所有'),
+    new HtmlWebpackPlugin({template: 'index.html'}),
+    new uglifyJsPlugin()
+  ],
+  devServer: {
+    //为哪一个文件夹提供本地服务，默认是根文件夹，我们这里要填写./dist
+    contentBase: './dist',
+    //页面实时刷新
+    inline: true,
+    //端口号
+    port: 8002
   }
 }

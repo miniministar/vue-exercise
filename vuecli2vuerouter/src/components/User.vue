@@ -1,13 +1,19 @@
 <template>
   <div>
-    <h2>我是about</h2>
-    <p>about内容</p>
+    <h2>用户-{{userId}}</h2>
+    <p>用户信息</p>
   </div>
 </template>
 
 <script>
   export default {
-    name: "About.vue"
+    name: "User",
+    computed: {
+      userId(){
+        //this.$route 当前活跃的路由对象
+        return this.$route.params.userId;
+      }
+    }
   }
 </script>
 
