@@ -4,6 +4,7 @@ import Home from '../views/home/Home'
 import Category from '../views/category/Category'
 import Cart from '../views/cart/Cart'
 import Profile from '../views/profile/Profile'
+import VuexTest from '../views/test/VuexTest'
 
 Vue.use(Router)
 
@@ -27,6 +28,10 @@ const routes = [
   {
     path: '/profile',
     component: Profile
+  },
+  {
+    path: '/test/vuex',
+    component: VuexTest
   }
 ]
 
