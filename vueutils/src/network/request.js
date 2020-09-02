@@ -7,7 +7,7 @@ export function request(config) {
     baseURL: 'http://www.nanxiang.com/NMIS',
     timeout: 5000
   })
-
+//返回promise
   return instance(config)
 }
 
