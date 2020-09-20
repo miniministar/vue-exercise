@@ -1,5 +1,7 @@
 @import "./normalize.css";
-
+/*:root->css伪类 获取根元素HTML
+css中定义变量
+*/
 :root {
   --color-text: #666;
   --color-high-text: #ff5777;
@@ -7,6 +9,12 @@
   --color-background: #fff;
   --font-size: 14px;
   --line-height: 1.5;
+
+  --large-size: 50px;
+}
+/*使用变量*/
+.test-variable{
+  font-size: var(--large-size);
 }
 
 html {
