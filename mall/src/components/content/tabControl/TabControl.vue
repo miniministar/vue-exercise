@@ -29,7 +29,7 @@
     methods:{
       tabItemClick(index) {
         this.currentIndex = index
-        // this.$emit('tabItemClick', index)
+        this.$emit('tabItemClick', index)
       }
     }
   }
