@@ -1,5 +1,5 @@
 <template>
-  <div class="goods-list-item">
+  <div class="goods-list-item" @click="itemClick">
     <img class="goods-list-img" :src="goodsItem.img" alt="" @load="imageLoad">
     <div class="info">
       <p class="title">{{goodsItem.title}}</p>
@@ -24,8 +24,14 @@
       }
     },
     methods:{
-      imageLoad() {
-        this.$emit('imageLoad');
+      imageLoad(event) {
+        // console.log(event);
+        this.$emit('itemImageLoad');
+        //事件总线发射事件
+        this.$bus.$emit('itemImageLoad')
+      },
+      itemClick(){
+        this.$router.push('/detail/' + this.goodsItem.iid)
       }
     }
   }
@@ -82,7 +88,7 @@
   width: 20px;
   display: inline-block;
   vertical-align: bottom;
-  background: url("~@/assets/img/home/collect_icon.png") center right no-repeat;
+  background: url("~assets/img/home/collect_icon.png") center right no-repeat;
   background-size: auto 1rem;
 }
 </style>

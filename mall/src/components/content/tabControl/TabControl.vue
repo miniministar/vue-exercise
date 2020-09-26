@@ -54,4 +54,9 @@
     border-bottom: 2px solid var(--color-high-text);
     padding: 5px;
   }
+  .tab-control{
+    /*position: sticky;*/
+    /*top: 44px;*/
+    /*z-index: 9;*/
+  }
 </style>

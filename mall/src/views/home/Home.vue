@@ -3,17 +3,24 @@
     <nav-bar class="home-nav">
       <div slot="center">购物街</div>
     </nav-bar>
+    <tab-control :titles="['流行','新款', '精选']" class="tab-control-top"
+                 ref="tabControl2"
+                 @tabItemClick="tabItemClick"
+                 v-show="isTabShow"
+    ></tab-control>
     <scroll class="content" ref="scroll"
             :probe-type="3"
             @scroll="contentScroll"
             :pull-up-load="true"
             @pullingUp="loadMore"
     >
-      <home-swiper :banners="banners"></home-swiper>
+      <home-swiper :banners="banners" @swiperImageLoad="swiperImageLoad"></home-swiper>
       <home-recommend :recommends="recommends"></home-recommend>
       <home-feature></home-feature>
       <tab-control :titles="['流行','新款', '精选']"
-                   @tabItemClick="tabItemClick"></tab-control>
+                   ref="tabControl"
+                   @tabItemClick="tabItemClick"
+      ></tab-control>
       <goods-list :goods="showGoodsList"></goods-list>
     </scroll>
     <back-top @click.native="backClick" v-show="isShowBackTop"></back-top>
@@ -21,6 +28,8 @@
 </template>
 
 <script>
+  import {debounce} from "common/utils"
+
   import NavBar from 'components/common/navbar/NavBar'
   import Scroll from 'components/common/scroll/Scroll'
 
@@ -56,15 +65,37 @@
           sell: {page: 0, list:[]}
         },
         currentType: 'pop',
-        isShowBackTop: true
+        isShowBackTop: true,
+        tabOffsetTop: 0,
+        isTabShow: false,
+        saveY: 0
       }
     },
     created() {
       //1、请求多个数据
-      this.getHomeMultidata();
-      this.getHomeGoods('pop');
-      this.getHomeGoods('new');
-      this.getHomeGoods('sell');
+      this.getHomeMultidata()
+      this.getHomeGoods('pop')
+      this.getHomeGoods('new')
+      this.getHomeGoods('sell')
+    },
+    mounted(){
+      //1、监听事件总线, item中的图片加载完成
+      this.$bus.$on('itemImageLoad', ()=>{
+        // this.$refs.scroll.refresh()
+        //使用防抖函数，防止频繁刷新
+        this.$refs.scroll && this.$refs.scroll.refresh && debounce(this.$refs.scroll.refresh, 500)()
+      })
+      //2、所有的组件都有一个$.el属性，用于获取组件中的元素
+      // console.log(this.$refs.tabControl.$el.offsetTop);
+    },
+    destroyed(){
+    },
+    activated(){
+      this.$refs.scroll.scrollTo(0, this.saveY)
+      this.$refs.scroll.refresh()
+    },
+    deactivated(){
+      this.saveY = this.$refs.scroll.getScrollY()
     },
     methods:{
       tabItemClick(index) {
@@ -79,6 +110,8 @@
             this.currentType = 'sell'
             break;
         }
+        this.$refs.tabControl.currentIndex = index;
+        this.$refs.tabControl2.currentIndex = index;
       },
       getHomeMultidata(){
         getHomeMultidata().then(res => {
@@ -100,12 +133,18 @@
         this.$refs.scroll.scrollTo(0, 0, 500)
       },
       contentScroll(position) {
+        //1、判断backtop是否显示
         this.isShowBackTop = (-position.y) > 1000
+
+        //2、决定tabcontrol是否吸顶显示
+        this.isTabShow = (-position.y) > this.tabOffsetTop
       },
       loadMore(){
-        console.log(this.currentType + ' load more: ' + (this.goods[this.currentType].page + 1) );
+        console.log(this.currentType + ' load more page ' + (this.goods[this.currentType].page + 1) );
         this.getHomeGoods(this.currentType)
-        this.$refs.scroll.scroll.refresh();
+      },
+      swiperImageLoad() {
+        this.tabOffsetTop = this.$refs.tabControl.$el.offsetTop
       }
     },
     computed:{
@@ -124,16 +163,11 @@
   .home-nav{
     background-color: #ff617f;
     color: white;
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: 9;
-  }
-  .tab-control{
-    position: sticky;
-    top: 44px;
-    z-index: 9;
+    /*position: fixed;*/
+    /*top: 0;*/
+    /*left: 0;*/
+    /*right: 0;*/
+    /*z-index: 9;*/
   }
   .content{
     overflow: hidden;
@@ -142,5 +176,17 @@
     right: 0;
     top: 44px;
     bottom: 49px;
+  }
+  .fixed {
+    position: fixed;
+    top: 44px;
+    right: 0;
+    left: 0;
+  }
+  .tab-control-top {
+    position: relative;
+    /*top: 44px;*/
+    top: 0;
+    z-index: 9;
   }
 </style>
