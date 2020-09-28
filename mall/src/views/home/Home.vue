@@ -121,7 +121,14 @@
       },
       getHomeGoods(type) {
         const page = this.goods[type].page + 1;
-        getHomeGoods(type, page).then(res => {
+        getHomeGoods(type, page).then(data => {
+
+          let res = []
+          const str = JSON.parse(data.data.substr(11, data.data.length - 13));
+          if(str.result && str.result.wall && str.result.wall.docs) {
+            res =  str.result.wall.docs;
+          }
+
           for(const index in res) {
             this.goods[type].list.push(res[index]);
           }

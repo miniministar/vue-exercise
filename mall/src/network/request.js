@@ -50,18 +50,18 @@ export function MoguPost(config) {
     // }
     // params.data.pageSize = 24
     // params.data.sort = "pop"
-    // config.data = params
     return config
   })
 
   instance.interceptors.response.use(res=>{
     // console.log(res);
-    const str = JSON.parse(res.data.substr(11, res.data.length - 13));
-    if(str.result && str.result.wall && str.result.wall.docs) {
-      return str.result.wall.docs;
-    }else {
-      return [];
-    }
+    // const str = JSON.parse(res.data.substr(11, res.data.length - 13));
+    // if(str.result && str.result.wall && str.result.wall.docs) {
+    //   return str.result.wall.docs;
+    // }else {
+    //   return [];
+    // }
+    return res
   }, err => {
     console.log(err);
   })
