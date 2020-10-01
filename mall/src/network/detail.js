@@ -10,6 +10,15 @@ export function getDetail(iid) {
   })
 }
 
+export function getRecommend() {
+  return MoguPost({
+    url: '/mogu/recommend',
+    method: 'post',
+    data: {
+    }
+  })
+}
+
 export class GoodsInfo {
   constructor(itemInfo, priceInfo, itemServices) {
     this.title = itemInfo.title;
@@ -30,5 +39,13 @@ export class Shop {
     this.score = shopInfo.score;
     this.cSells = shopInfo.cSells;
     this.cGoods = shopInfo.cGoods;
+  }
+}
+
+//参数信息
+export class Param {
+  constructor(info, rule) {
+    this.info = info.set;
+    this.rule = rule.tables;
   }
 }

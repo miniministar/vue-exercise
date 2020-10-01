@@ -28,7 +28,7 @@
 </template>
 
 <script>
-  import {debounce} from "common/utils"
+  import {imgRefrashMixin} from "common/mixins"
 
   import NavBar from 'components/common/navbar/NavBar'
   import Scroll from 'components/common/scroll/Scroll'
@@ -44,6 +44,7 @@
   import {getHomeMultidata, getHomeGoods} from "network/home";
   export default {
     name: "Home",
+    mixins: [imgRefrashMixin],
     components:{
       NavBar,
       TabControl,
@@ -80,11 +81,12 @@
     },
     mounted(){
       //1、监听事件总线, item中的图片加载完成
-      this.$bus.$on('itemImageLoad', ()=>{
-        // this.$refs.scroll.refresh()
-        //使用防抖函数，防止频繁刷新
-        this.$refs.scroll && this.$refs.scroll.refresh && debounce(this.$refs.scroll.refresh, 500)()
-      })
+      // this.itemImgLister = ()=>{
+      //   // this.$refs.scroll.refresh()
+      //   //使用防抖函数，防止频繁刷新
+      //   this.$refs.scroll && this.$refs.scroll.refresh && debounce(this.$refs.scroll.refresh, 500)()
+      // }
+      // this.$bus.$on('itemImgLoad', this.itemImgLister)
       //2、所有的组件都有一个$.el属性，用于获取组件中的元素
       // console.log(this.$refs.tabControl.$el.offsetTop);
     },
@@ -96,6 +98,9 @@
     },
     deactivated(){
       this.saveY = this.$refs.scroll.getScrollY()
+
+      //2.取消全局事件的监听
+      this.$bus.$off('itemImgLoad', this.itemImgLister)
     },
     methods:{
       tabItemClick(index) {

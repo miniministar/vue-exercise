@@ -1,6 +1,6 @@
 <template>
   <div class="goods-list-item" @click="itemClick">
-    <img class="goods-list-img" :src="goodsItem.img" alt="" @load="imageLoad">
+    <img class="goods-list-img" :src="goodsImage" alt="" @load="imageLoad">
     <div class="info">
       <p class="title">{{goodsItem.title}}</p>
       <span class="price">{{goodsItem.price}}</span>
@@ -26,12 +26,17 @@
     methods:{
       imageLoad(event) {
         // console.log(event);
-        this.$emit('itemImageLoad');
+        this.$emit('itemImgLoad');
         //事件总线发射事件
-        this.$bus.$emit('itemImageLoad')
+        this.$bus.$emit('itemImgLoad')
       },
       itemClick(){
         this.$router.push('/detail/' + this.goodsItem.iid)
+      }
+    },
+    computed: {
+      goodsImage() {
+        return this.goodsItem.img ? this.goodsItem.img : this.goodsItem.image
       }
     }
   }
