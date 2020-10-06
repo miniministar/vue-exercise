@@ -1,7 +1,7 @@
 /**
  * 定义防抖动函数，防止函数调用频繁，图片加载完成后，再进行重新计算高度的刷新
  */
-export  function debounce(func, delay) {
+export  function debounce(func, delay = 50) {
   let timer;
   return function(...args) {
     if (timer) clearTimeout(timer);

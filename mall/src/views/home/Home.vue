@@ -28,14 +28,13 @@
 </template>
 
 <script>
-  import {imgRefrashMixin} from "common/mixins"
+  import {imgRefrashMixin, backTopMixin} from "common/mixins"
 
   import NavBar from 'components/common/navbar/NavBar'
   import Scroll from 'components/common/scroll/Scroll'
 
   import TabControl from 'components/content/tabControl/TabControl'
   import GoodsList from 'components/content/goods/GoodsList'
-  import BackTop from 'components/content/backTop/BackTop'
 
   import HomeSwiper from './childComp/HomeSwiper'
   import HomeRecommend from './childComp/HomeRecommend'
@@ -44,13 +43,12 @@
   import {getHomeMultidata, getHomeGoods} from "network/home";
   export default {
     name: "Home",
-    mixins: [imgRefrashMixin],
+    mixins: [imgRefrashMixin, backTopMixin],
     components:{
       NavBar,
       TabControl,
       GoodsList,
       Scroll,
-      BackTop,
 
       HomeSwiper,
       HomeRecommend,
@@ -66,7 +64,6 @@
           sell: {page: 0, list:[]}
         },
         currentType: 'pop',
-        isShowBackTop: true,
         tabOffsetTop: 0,
         isTabShow: false,
         saveY: 0
@@ -141,12 +138,9 @@
           this.$refs.scroll.finishPullUp()
         })
       },
-      backClick() {
-        this.$refs.scroll.scrollTo(0, 0, 500)
-      },
       contentScroll(position) {
         //1、判断backtop是否显示
-        this.isShowBackTop = (-position.y) > 1000
+        this.listenerBackTop(position)
 
         //2、决定tabcontrol是否吸顶显示
         this.isTabShow = (-position.y) > this.tabOffsetTop

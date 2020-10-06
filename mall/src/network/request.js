@@ -36,7 +36,7 @@ export function request(config) {
 export function MoguPost(config) {
   //1.创建axios实例
   const  instance = axios.create({
-    baseURL: 'http://192.168.124.17:8085',
+    baseURL: 'http://192.168.124.4:8085',
     timeout: 5000,
   })
 

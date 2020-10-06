@@ -3,7 +3,9 @@ import {debounce} from "common/utils"
 //图片列表刷新
 export const imgRefrashMixin = {
   data(){
-    itemImgLister: null
+    return {
+      itemImgLister: null
+    }
   },
   mounted() {
     //1、监听事件总线, item中的图片加载完成
@@ -13,6 +15,26 @@ export const imgRefrashMixin = {
     }
 
     this.$bus.$on('itemImgLoad',this.itemImgLister);
-    console.log('mixins');
+  }
+}
+
+import BackTop from 'components/content/backTop/BackTop'
+//回到顶部按钮
+export const backTopMixin = {
+  components:{
+    BackTop
+  },
+  data(){
+    return {
+      isShowBackTop: false
+    }
+  },
+  methods:{
+    backClick() {
+      this.$refs.scroll.scrollTo(0, 0, 500)
+    },
+    listenerBackTop(position) {
+      this.isShowBackTop = (-position.y) > 1000
+    }
   }
 }
